@@ -38,11 +38,11 @@ post '/' do
     end
 
     obj = bucket.objects[file_key_path(file_name)]
-    obj.write(csv_string)
+    obj.write(csv_string, acl: 'authenticated_read')
 
     response = [200, {
       success: true,
-      location: obj.public_url.to_s
+      location: obj.url_for(:read).to_s
     }.to_json]
   else
     response = [400, {
