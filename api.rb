@@ -15,7 +15,7 @@ configure :development do
 end
 
 configure :production do
-  set :allow_origin, 'http://adler-staging.s3.amazonaws.com/'
+  set :allow_origin, 'http://adler-staging.s3.amazonaws.com'
 end
 
 set :allow_methods, [:post]
