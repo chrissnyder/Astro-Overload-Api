@@ -11,9 +11,13 @@ end
 
 configure :development do
   require 'pry'
+  set :allow_origin, 'http://localhost:3333'
 end
 
-set :allow_origin, 'http://localhost:3333'
+configure :production do
+  set :allow_origin, 'http://adler-staging.s3.amazonaws.com/'
+end
+
 set :allow_methods, [:post]
 
 AWS.config({
