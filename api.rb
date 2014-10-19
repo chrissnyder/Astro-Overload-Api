@@ -1,12 +1,16 @@
 require 'sinatra'
 require 'sinatra/cross_origin'
+require 'sinatra/json'
 require 'aws-sdk'
 require 'json'
 require 'csv'
-require 'pry'
 
 configure do
   enable :cross_origin
+end
+
+configure :development do
+  require 'pry'
 end
 
 set :allow_origin, 'http://localhost:3333'
@@ -38,18 +42,18 @@ post '/' do
     end
 
     obj = bucket.objects[file_key_path(file_name)]
-    obj.write(csv_string, acl: 'authenticated_read')
+    obj.write(csv_string, acl: 'authenticated_read', content_disposition: "attachment; filename=#{file_name}")
 
-    response = [200, {
+    response = {
       success: true,
       location: obj.url_for(:read).to_s
-    }.to_json]
+    }
   else
-    response = [400, {
+    response = {
       success: false,
       message: 'no data'
-    }.to_json]
+    }
   end
 
-  response
+  json response
 end
