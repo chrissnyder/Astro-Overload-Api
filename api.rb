@@ -37,11 +37,15 @@ post '/' do
 
   if attendees.length
     file_name = "#{ event_name } #{ Time.now }.csv".downcase.gsub(' ', '_')
+
+    columns = attendees.collect(&:keys).flatten.uniq
+    default_attendee = columns.each_with_object({}) {|column, hash| hash[column] = ''}
+
     csv_string = CSV.generate do |csv|
-      csv << attendees.first.keys
+      csv << columns
 
       attendees.each do |attendee|
-        csv << attendee.values
+        csv << default_attendee.merge(attendee).values
       end
     end
 
